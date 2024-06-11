@@ -1,6 +1,7 @@
 package api.forum_duvida.domain.usuario;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "Usuario")
-@Table(name = "usuario")
+@Table(name = "usuarios")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
