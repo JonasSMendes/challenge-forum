@@ -44,4 +44,16 @@ public class Postagem {
         this.autor = usuario;
         this.curso = curso;
     }
+
+    public void atualizaInfo(DadosPostagem dados) {
+        if (dados.titulo() != null){
+            this.titulo = dados.titulo();
+        }
+        if (dados.mensagem() != null){
+            this.mensagem = dados.mensagem();
+        }
+        if (dados.curso() != null){
+            this.curso = dados.curso();
+        }
+    }
 }
