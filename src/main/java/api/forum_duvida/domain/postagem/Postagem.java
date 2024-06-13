@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 
@@ -38,11 +39,12 @@ public class Postagem {
     private String curso;
 
 
-    public Postagem(String titulo, String mensagem, Usuario usuario, String curso) {
-        this.titulo = titulo;
-        this.mensagem = mensagem;
-        this.autor = usuario;
-        this.curso = curso;
+    public Postagem(DadosPostagem dados, Usuario autor) {
+        this.titulo = dados.titulo();
+        this.mensagem = dados.mensagem();
+        this.curso = dados.curso();
+        this.ativo = true;
+        this.autor = autor;
     }
 
     public void atualizaInfo(DadosPostagem dados) {

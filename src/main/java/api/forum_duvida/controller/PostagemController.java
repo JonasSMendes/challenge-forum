@@ -1,5 +1,6 @@
 package api.forum_duvida.controller;
 
+import api.forum_duvida.domain.postagem.DadosDetalhamentoPostagem;
 import api.forum_duvida.domain.postagem.DadosPostagem;
 import api.forum_duvida.domain.postagem.dto.DadosPostagemDTO;
 import api.forum_duvida.domain.postagem.service.PostagemService;
@@ -29,9 +30,9 @@ public class PostagemController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity postagemForum(@RequestBody @Valid DadosPostagem dados){
-        var dto = postagemService.agendar(dados);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<DadosDetalhamentoPostagem> criarTopico(@RequestBody @Valid DadosPostagem dados) {
+        DadosDetalhamentoPostagem detalhamentoPostagem = postagemService.postar(dados);
+        return ResponseEntity.ok(detalhamentoPostagem);
     }
 
     @GetMapping

@@ -6,9 +6,15 @@ import api.forum_duvida.domain.postagem.DadosPostagem;
 import api.forum_duvida.domain.postagem.Postagem;
 import api.forum_duvida.domain.postagem.dto.DadosPostagemDTO;
 import api.forum_duvida.domain.postagem.validation.ValidadorPostagem;
+import api.forum_duvida.domain.usuario.AuthenticationLogin;
+import api.forum_duvida.domain.usuario.Usuario;
 import api.forum_duvida.repository.PostagemRepository;
 import api.forum_duvida.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,20 +32,48 @@ public class PostagemService {
     @Autowired
     private List<ValidadorPostagem> validador;
 
-    public DadosDetalhamentoPostagem agendar(DadosPostagem dados) {
+    @Autowired
+    private AuthenticationLogin authenticationLogin;
 
-        if (!usuarioRepository.existsById(dados.id_autor())){
-            throw new ValidacaoException("Id do usuario não encontratado");
+
+    public DadosDetalhamentoPostagem postar(DadosPostagem dados) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Usuário não autenticado");
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof Optional) {
+            Optional<?> optionalPrincipal = (Optional<?>) principal;
+            System.out.println("Conteúdo do Optional principal: " + optionalPrincipal);
+        }
+
+        Usuario usuario;
+        if (principal instanceof Optional) {
+            Optional<?> optionalPrincipal = (Optional<?>) principal;
+            if (optionalPrincipal.isPresent() && optionalPrincipal.get() instanceof Usuario) {
+                usuario = (Usuario) optionalPrincipal.get();
+            } else {
+                throw new IllegalStateException("Principal não contém um usuário válido: " + optionalPrincipal);
+            }
+        } else if (principal instanceof Usuario) {
+            usuario = (Usuario) principal;
+        } else if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            usuario = usuarioRepository.findByLogin(username)
+                    .orElseThrow(() -> new ValidacaoException("Usuário não encontrado"));
+        } else {
+            throw new IllegalStateException("Não foi possível determinar o nome de usuário a partir do principal: " + principal);
         }
 
         validador.forEach(v -> v.validador(dados));
-
-        var usuario = usuarioRepository.getReferenceById(dados.id_autor());
-        var postagem = new Postagem(dados.titulo(), dados.mensagem(), usuario, dados.curso());
-
+        var postagem = new Postagem(dados, usuario);
         postagemRepository.save(postagem);
+
         return new DadosDetalhamentoPostagem(postagem);
     }
+
+
 
 
     public List<Postagem> buscarPostagemPorNomeEAno(String curso, int ano){
