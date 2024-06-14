@@ -4,11 +4,11 @@
 
 Projeto Desafio Alura/Oracle.
 
-O projeto de topicos é um forum de duvidas ficticias para tirar duvidas sobre assuntos de programação. 
+O projeto de topicos é um forum de duvidas ficticio sobre assuntos de programação. 
 O projeto deve possuir a criaçao de topicos, tanto a exclusão dos topicos quanto a editação só poderar ser feita pelo criador.
 
 Projeto contara com um cadastro de usuarios, usando criptografia com token JWT, com data de expiração de 3h para ter acesso as requisições.
-Todos os Usuarios cadastrados serão salvos no banco de dados com senhas criptografadas em algoritmo HMAC256.
+Todos os usuarios cadastrados serão salvos no banco de dados com senhas criptografadas em algoritmo HMAC256.
 
 API Rest com Spring-boot e Spring-security.
 
