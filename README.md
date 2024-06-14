@@ -2,7 +2,7 @@
 
 # 💻 Sobre o projeto
 
-Projeto Desafio Alura.
+Projeto Desafio Alura/Oracle.
 
 O projeto de topicos é um forum de duvidas ficticias para tirar duvidas sobre assuntos de programação. 
 O projeto deve possuir a criaçao de topicos, tanto a exclusão dos topicos quanto a editação só poderar ser feita pelo criador.
